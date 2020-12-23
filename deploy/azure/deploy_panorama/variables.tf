@@ -56,7 +56,7 @@ variable "virtualMachineSize" {
 }
 variable "panoramaVersion" {
   description = "Panorama Version"
-  default     = "8.1.2"
+  default     = "10.1.2"
 }
 variable "adminUsername" {
   description = "Admin Username"
