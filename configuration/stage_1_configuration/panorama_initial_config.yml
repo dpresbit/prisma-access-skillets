@@ -118,41 +118,6 @@
       retries: 10
       delay: 60
 
-    - name: Download PAN-OS 9.0.0 base image only
-      panos_software:
-        provider: '{{ provider }}'
-        version: '9.0.0'
-        install: False
-        restart: False
-      when: |
-        (
-        system_info_json.response.result.system['sw-version'] != '9.0.7'
-        and deployment_type == 'azure'
-        )
-
-    - name: Download and Install PAN-OS 9.0.7
-      panos_software:
-        provider: '{{ provider }}'
-        version: '9.0.7'
-        install: True
-        restart: True
-      when: system_info_json.response.result.system['sw-version'] != '9.0.7'
-
-    - name: Wait for Reboot
-      pause:
-        minutes: 3
-      when: system_info_json.response.result.system['sw-version'] != '9.0.7'
-
-    - name: Show System Info
-      panos_op:
-        provider: '{{ provider }}'
-        cmd: 'show system info'
-      register: reboot_results
-      until: reboot_results is not failed
-      retries: 30
-      delay: 60
-      when: system_info_json.response.result.system['sw-version'] != '9.0.7'
-
     - name: Check Plugins
       panos_op:
         provider: '{{ provider }}'
@@ -162,7 +127,7 @@
     - name: Download Cloud Services Plugin
       panos_op:
         provider: '{{ provider }}'
-        cmd: 'request plugins download file cloud_services-1.6.0'
+        cmd: 'request plugins download file cloud_services-1.7.0-h3'
       register: plugin_download
 
     - name: Check Cloud Services Plugin Download
@@ -177,7 +142,7 @@
     - name: Install Cloud Services Plugin
       panos_op:
         provider: '{{ provider }}'
-        cmd: 'request plugins install cloud_services-1.6.0'
+        cmd: 'request plugins install cloud_services-1.7.0-h3'
       register: plugin_install
 
     - name: Check Cloud Services Plugin Install
